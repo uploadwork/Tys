@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #f7f7f8;
+      color: #1d1d1f;
+    }
+    .container {
+      max-width: 420px;
+      margin: 0 auto;
+      padding-bottom: 80px;
+    }
+    header {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header .text {
+      font-size: 14px;
+      color: #6e6e73;
+    }
+    header h2 {
+      margin: 4px 0 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    header .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f1edff;
+      color: #7a5cff;
+      font-weight: bold;
+      font-size: 18px;
+      text-transform: uppercase;
+    }
+    /* Balance Card */
+    .balance-card {
+      margin: 0 20px;
+      padding: 20px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #7a5cff, #9f87ff);
+      color: #fff;
+      position: relative;
+    }
+    .balance-card .label {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .balance-card .amount {
+      font-size: 28px;
+      font-weight: 800;
+      margin-top: 8px;
+    }
+    .balance-card .plus {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /* Quick actions */
+    .actions {
+      margin: 20px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+    .action {
+      background: #fff;
+      border-radius: 16px;
+      padding: 14px 6px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+      text-align: center;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .eye-slash { display: none; }
+    .action svg {
+      width: 22px;
+      height: 22px;
+      margin-bottom: 6px;
+      stroke: #6a55ff;
+    }
+    /* Tips */
+    .tips {
+      margin: 0 20px 20px;
+      background: #fff;
+      padding: 16px;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .tips h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #7a5cff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 6px;
+    }
+    .tips p {
+      margin: 0;
+      font-size: 14px;
+      color: #444;
+    }
+    /* Account Progress */
+    .progress {
+      margin: 0 20px 100px;
+      background: #fff;
+      padding: 16px;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+    .progress h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #7a5cff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin: 0 0 10px;
+    }
+    .tiers {
+      display: flex;
+      gap: 10px;
+    }
+    .tier {
+      flex: 1;
+      padding: 10px;
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 14px;
+      background: #f0f0ff;
+      color: #666;
+    }
+    .tier.active {
+      background: #7a5cff;
+      color: #fff;
+    }
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #fff;
+      border-top: 1px solid #eee;
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+    }
+    .bottom-nav a {
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      color: #666;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    .bottom-nav a.active {
+      color: #7a5cff;
+    }
+    .bottom-nav svg {
+      width: 26px;
+      height: 26px;
+      margin-bottom: 3px;
+    }
+    .notif-dot {
+      display: block;
+      width: 8px;
+      height: 8px;
+      background: red;
+      border-radius: 50%;
+      position: absolute;
+      top: 4px;
+      right: 22px;
+    }
+  
+    .file-chip {
+      display: inline-block;
+      padding: 8px 14px;
+      background: #7a5cff;
+      color: #fff;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    #filePreview img {
+      margin-top: 10px;
+      max-width: 120px;
+      max-height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #eee;
+    }
+    .deposit-btn {
+      margin-top: 15px;
+      background: #7a5cff;
+      color: #fff;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+  
+    input, textarea, select {
+      font-size: 16px; /* prevents zoom on mobile */
+    }
+
+  
+    input, textarea, select {
+      font-size: 16px; /* prevents zoom */
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #7a5cff;
+      box-shadow: 0 0 0 2px rgba(122, 92, 255, 0.2);
+    }
+
+  
+    .file-chip {
+      display: inline-block;
+      padding: 10px 16px;
+      background: #7a5cff;
+      color: #fff;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .file-chip:hover {
+      background: #6a4be0;
+      transform: scale(1.05);
+    }
+    .file-chip:active {
+      transform: scale(0.97);
+    }
+
+  
+    .file-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .file-chip img {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+
+  
+    #chipClear {
+      font-size: 14px;
+      color: #fff;
+      background: #e74c3c;
+      border-radius: 50%;
+      padding: 2px 6px;
+      line-height: 1;
+    }
+    #chipClear:hover {
+      background: #c0392b;
+    }
+
+  
+    .chip-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .file-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      background: #7a5cff;
+      color: #fff;
+      border-radius: 20px;
+      cursor: default;
+      font-size: 14px;
+    }
+    .file-chip img {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+    .file-chip .chipClear {
+      font-size: 14px;
+      color: #fff;
+      background: #e74c3c;
+      border-radius: 50%;
+      padding: 0 5px;
+      cursor: pointer;
+    }
+    .file-chip .chipClear:hover {
+      background: #c0392b;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div>
+        <p id="greeting">Hi, <span id="username"></span></p>
+        <h2 id="timeGreeting"></h2>
+      </div>
+      <div id="profileBadge" class="avatar"></div>
+    </header>
+
+    <div class="balance-card">
+      <div class="label">
+  Balance
+  <svg id="toggleBalance" xmlns="http://www.w3.org/2000/svg" fill="none"
+       viewBox="0 0 24 24" stroke="#fff" stroke-width="1.8"
+       style="cursor:pointer; width:22px; height:22px;">
+    <!-- 👁 Eye Open -->
+    <path class="eye-open" stroke-linecap="round" stroke-linejoin="round"
+          d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
+    <circle class="eye-open" cx="12" cy="12" r="3"/>
+    
+    <!-- 👁 Eye Slash (hidden by default) -->
+    <path class="eye-slash" stroke-linecap="round" stroke-linejoin="round"
+          d="M17.94 17.94A10.94 10.94 0 0112 19c-7 0-11-7-11-7
+             a21.77 21.77 0 015.06-5.94m3.5-2.06A10.94 10.94 0 0112 5c7 0 11 7 11 7
+             a21.77 21.77 0 01-2.06 3.12M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+    <line class="eye-slash" x1="3" y1="3" x2="21" y2="21"/>
+  </svg>
+</div>
+      <div class="amount" id="balanceAmount">€87,044.71</div>
+      <div class="plus">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none"
+             viewBox="0 0 24 24" stroke="#fff" stroke-width="2.5"
+             style="width:22px; height:22px;">
+          <line x1="12" y1="5" x2="12" y2="19"/>
+          <line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="actions">
+      <div class="action">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path d="M7 10l5-5 5 5"/>
+          <path d="M12 5v14"/>
+        </svg>
+        Withdraw
+      </div>
+      <div class="action">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path d="M3 12a9 9 0 1 0 18 0"/>
+          <path d="M12 3v9l6 3"/>
+        </svg>
+        Change Currency
+      </div>
+      <div class="action">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <rect x="3" y="5" width="18" height="14" rx="2" ry="2"/>
+          <line x1="3" y1="10" x2="21" y2="10"/>
+        </svg>
+        Add Payment Method
+      </div>
+      <div class="action">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <circle cx="12" cy="12" r="9"/>
+          <polyline points="12,6 12,12 16,14"/>
+        </svg>
+        Transaction History
+      </div>
+    </div>
+
+    <div class="tips">
+      <h3>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+          <path d="M9 18h6"/>
+          <path d="M10 22h4"/>
+          <path d="M2 12a10 10 0 1 1 20 0c0 3.2-2 5-4 6H6c-2-1-4-2.8-4-6z"/>
+        </svg>
+        Tips & Insights
+      </h3>
+      <p>Set up a payment method for faster withdrawals.</p>
+    </div>
+
+    <div class="progress">
+      <h3>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.6">
+          <circle cx="12" cy="12" r="9"/>
+          <circle cx="12" cy="12" r="5"/>
+          <circle cx="12" cy="12" r="2"/>
+        </svg>
+        Account Progress
+      </h3>
+      <div class="tiers">
+        <div class="tier active">Tier 1</div>
+        <div class="tier">Tier 2</div>
+        <div class="tier">Tier 3</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <a href="#" class="active">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path d="M3 11l9-7 9 7"/>
+        <path d="M9 22V12h6v10"/>
+      </svg>
+      <span>Home</span>
+    </a>
+    <a href="#">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" class="bell">
+        <path d="M15 17h5l-1.4-1.4A2 2 0 0118 14V11a6 6 0 10-12 0v3c0 .5-.2 1-.6 1.4L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+      </svg>
+      <span>Notifications</span>
+      <span class="notif-dot"></span>
+    </a>
+  </nav>
+
+  
+  
+  
+  <!-- Profile Modal and styles -->
+  <style>
+    /* Modal styles (added) */
+    .modal {
+      display: none; 
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      width: 280px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .logout-btn {
+      margin-top: 15px;
+      background: #7a5cff;
+      color: #fff;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .logout-btn svg { width: 20px; height: 20px; stroke: #fff; }
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 22px;
+      font-weight: bold;
+      cursor: pointer;
+      color: #7a5cff;
+    }
+  
+    .file-chip {
+      display: inline-block;
+      padding: 8px 14px;
+      background: #7a5cff;
+      color: #fff;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    #filePreview img {
+      margin-top: 10px;
+      max-width: 120px;
+      max-height: 120px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid #eee;
+    }
+    .deposit-btn {
+      margin-top: 15px;
+      background: #7a5cff;
+      color: #fff;
+      border: none;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+  
+    input, textarea, select {
+      font-size: 16px; /* prevents zoom */
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: #7a5cff;
+      box-shadow: 0 0 0 2px rgba(122, 92, 255, 0.2);
+    }
+
+  
+    .file-chip {
+      display: inline-block;
+      padding: 10px 16px;
+      background: #7a5cff;
+      color: #fff;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .file-chip:hover {
+      background: #6a4be0;
+      transform: scale(1.05);
+    }
+    .file-chip:active {
+      transform: scale(0.97);
+    }
+
+  
+    .file-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .file-chip img {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+
+  
+    #chipClear {
+      font-size: 14px;
+      color: #fff;
+      background: #e74c3c;
+      border-radius: 50%;
+      padding: 2px 6px;
+      line-height: 1;
+    }
+    #chipClear:hover {
+      background: #c0392b;
+    }
+
+  
+    .chip-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .file-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      background: #7a5cff;
+      color: #fff;
+      border-radius: 20px;
+      cursor: default;
+      font-size: 14px;
+    }
+    .file-chip img {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+    .file-chip .chipClear {
+      font-size: 14px;
+      color: #fff;
+      background: #e74c3c;
+      border-radius: 50%;
+      padding: 0 5px;
+      cursor: pointer;
+    }
+    .file-chip .chipClear:hover {
+      background: #c0392b;
+    }
+
+  </style>
+
+  
+ <!-- Deposit Modal -->
+<div id="depositModal" class="modal">
+  <div class="modal-content">
+    <span id="closeDeposit" class="close">&times;</span>
+    <h3>Deposit Funds</h3>
+    <div id="adminDetails" style="margin:10px 0; font-size:15px; font-weight:500;"></div>
+    <p style="color:#e74c3c; font-size:13px; font-weight:600; margin:8px 0 12px;">
+<!-- Payment Methods from Admin -->
+    <div class="section">
+      <h4>Available Payment Methods</h4>
+      <div id="userPaymentMethods"></div>
+    </div>
+
+ 
+      ⚠️ Please make your payment externally and upload the correct slip as proof.<br>
+      ✅ Funds will be added after Slip Confirmation.
+    </p>
+    <form id="depositForm">
+      <input type="number" id="depositAmount" placeholder="Enter amount" required min="10"><br><br>
+      <div id="chipContainer" class="chip-container">
+        <label for="depositFile" class="file-chip"><span>Upload Slip</span></label>
+      </div>
+      <input type="file" id="depositFile" accept="image/*" multiple style="display:none">
+      <br>
+      <button type="submit" class="deposit-btn" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+             stroke="currentColor" width="18" height="18">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M12 12V4m0 0l-4 4m4-4l4 4"/>
+        </svg>
+        Submit Deposit
+      </button>
+    </form>
+  </div>
+</div>
+
+<!-- Buy PIN Modal -->
+<div class="modal" id="pinBuyModal">
+  <div class="modal-content">
+    <span class="close" id="closePinBuy">&times;</span>
+    <h3>Buy Activation PIN</h3>
+    <form id="pinBuyForm">
+      <div id="pinInstructions" style="margin-bottom:12px; font-size:14px; font-weight:500; color:#333;">
+        <!-- Admin instructions will appear here -->
+      </div>
+      <div class="input-group">
+        <label for="pinBuyFile">Upload Payment Slip</label>
+        <input type="file" id="pinBuyFile" accept="image/*" required>
+        <div id="pinBuyChipContainer" class="chip-container"></div>
+      </div>
+      <div id="userPaymentMethods"></div>
+      <button type="submit" class="deposit-btn">Submit PIN Request</button>
+    </form>
+  </div>
+</div>
+<!-- PIN Received Modal -->
+<div class="modal" id="pinReceivedModal">
+  <div class="modal-content" style="max-width:400px; text-align:center;">
+    <span class="close" id="closePinReceived">&times;</span>
+    <div id="pinReceivedMessage"></div>
+  </div>
+</div>
+<!-- Change Currency Modal -->
+<div id="currencyModal" class="modal">
+  <div class="modal-content" style="max-width:320px; text-align:left;">
+    <span class="close" id="closeCurrency">&times;</span>
+    <h3>Change Currency</h3>
+    <input id="currencySearch" type="text" placeholder="Search currency..." style="margin:10px 0; padding:10px 12px; width:100%; box-sizing:border-box;">
+    <div id="currencyList" style="max-height:260px; overflow-y:auto; border-radius:8px; border:1px solid #f4f4fb;"></div>
+  </div>
+</div>
+<!-- Withdraw Modal -->
+<div id="withdrawModal" class="modal">
+  <div class="modal-content">
+    <span id="closeWithdraw" class="close">&times;</span>
+    <h3>Withdraw Funds</h3>
+    <form id="withdrawForm">
+      <input type="number" id="withdrawAmount" placeholder="Enter amount" required min="20"><br><br>
+      <button type="submit" class="deposit-btn" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M12 8c-1.657 0-3 1.343-3 3h6c0-1.657-1.343-3-3-3zm0 0V5m0 6v6m-7 0h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+        </svg>
+        Proceed to Withdraw
+      </button>
+    </form>
+  </div>
+</div>  <!-- PIN Prompt Modal -->
+<div id="pinModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3>Enter Activation PIN</h3>
+    <form id="pinForm">
+      <input type="password" id="activationPin" placeholder="Enter PIN" required><br><br>
+      <button type="submit" class="deposit-btn" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+        <!-- Lock Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M12 11c.828 0 1.5.672 1.5 1.5S12.828 14 12 14s-1.5-.672-1.5-1.5S11.172 11 12 11zM6 10V8a6 6 0 1112 0v2m-9 0h6a2 2 0 012 2v7a2 2 0 01-2 2H9a2 2 0 01-2-2v-7a2 2 0 012-2z"/>
+        </svg>
+        Confirm Withdrawal
+      </button>
+    </form>
+    <div style="margin-top:12px; display:flex; justify-content:space-between; gap:10px;">
+      <button id="buyPinBtn" style="flex:1; background:#27ae60; color:#fff; padding:10px; border:none; border-radius:8px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+        <!-- Cart Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-1.35 2.7a1 1 0 00.9 1.45h12.9m-9 4a1 1 0 100-2 1 1 0 000 2zm8 0a1 1 0 100-2 1 1 0 000 2z"/>
+        </svg>
+        Buy PIN
+      </button>
+      <button id="learnMoreBtn" style="flex:1; background:#2980b9; color:#fff; padding:10px; border:none; border-radius:8px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
+        <!-- Info Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="18" height="18">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                d="M13 16h-1v-4h-1m1-4h.01M21 12A9 9 0 113 12a9 9 0 0118 0z"/>
+        </svg>
+        Learn More
+      </button>
+    </div>
+  </div>
+</div>
+<!-- Learn More Modal -->
+<div id="learnMoreModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeLearnMore">&times;</span>
+    
+    <h2>
+      <svg xmlns="http://www.w3.org/2000/svg" 
+           width="24" height="24" viewBox="0 0 24 24" 
+           fill="none" stroke="#2980b9" stroke-width="2" 
+           stroke-linecap="round" stroke-linejoin="round" 
+           style="vertical-align: middle; margin-right: 8px;">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="16" x2="12" y2="12"/>
+        <line x1="12" y1="8" x2="12" y2="8"/>
+      </svg>
+      About Activation PIN
+    </h2>
+
+    <p>
+      The <strong>Activation PIN</strong> is a security measure designed to protect your account and prevent unauthorized withdrawals.
+    </p>
+
+    <h3>
+      <svg xmlns="http://www.w3.org/2000/svg" 
+           width="20" height="20" viewBox="0 0 24 24" 
+           fill="none" stroke="green" stroke-width="2" 
+           stroke-linecap="round" stroke-linejoin="round" 
+           style="vertical-align: middle; margin-right: 6px;">
+        <path d="M12 1a9 9 0 0 0-9 9v4a4 4 0 0 0 4 4h1v2a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2v-2h1a4 4 0 0 0 4-4v-4a9 9 0 0 0-9-9z"/>
+      </svg>
+      Why it’s important
+    </h3>
+    <ul>
+      <li>Ensures only you can authorize withdrawals</li>
+      <li>Protects your funds against unauthorized access</li>
+      <li>Acts as a second layer of verification</li>
+    </ul>
+
+    <h3>
+      <svg xmlns="http://www.w3.org/2000/svg" 
+           width="20" height="20" viewBox="0 0 24 24" 
+           fill="none" stroke="orange" stroke-width="2" 
+           stroke-linecap="round" stroke-linejoin="round" 
+           style="vertical-align: middle; margin-right: 6px;">
+        <circle cx="12" cy="12" r="10"/>
+        <path d="M12 8v4l3 3"/>
+      </svg>
+      How to get your PIN
+    </h3>
+    <ul>
+      <li>Purchase one instantly via the <strong>“Buy PIN”</strong> option</li>
+      <li>Or request one directly from the from your project manager</li>
+    </ul>
+
+    <h3>
+      <svg xmlns="http://www.w3.org/2000/svg" 
+           width="20" height="20" viewBox="0 0 24 24" 
+           fill="none" stroke="red" stroke-width="2" 
+           stroke-linecap="round" stroke-linejoin="round" 
+           style="vertical-align: middle; margin-right: 6px;">
+        <path d="M10.29 3.86L1.82 18a1.5 1.5 0 0 0 1.29 2.25h17.78A1.5 1.5 0 0 0 22.18 18L13.71 3.86a1.5 1.5 0 0 0-2.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12" y2="17"/>
+      </svg>
+      Keep it safe
+    </h3>
+    <p>
+      Never share your Activation PIN with anyone. If you believe it has been compromised, request a new one immediately.
+    </p>
+  </div>
+</div>
+  
+  <!-- Notification Modal -->
+  <div id="notifyModal" class="modal">
+    <div class="modal-content">
+      <h3 id="notifyMessage"></h3>
+      <button id="notifyClose" class="deposit-btn" style="display:flex;align-items:center;justify-content:center;gap:8px;">
+  <!-- Check Icon -->
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+       stroke="currentColor" width="18" height="18">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M5 13l4 4L19 7"/>
+  </svg>
+  OK
+</button>
+    </div>
+  </div>
+
+  <!-- Profile Modal -->
+  <div id="profileModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h3>Account</h3>
+      <button id="logoutBtn" class="logout-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
+             viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" 
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a2 2 0 11-4 0v-1m0-10V5a2 2 0 114 0v1"/>
+        </svg>
+        Logout
+      </button>
+<!-- PIN Notification Modal -->
+<div id="pinNotifyModal" class="modal">
+  <div class="modal-content">
+    <h3 id="pinNotifyMessage" style="white-space:pre-line; text-align:center;"></h3>
+    <button id="pinNotifyClose" class="deposit-btn" 
+            style="margin-top:15px; display:flex; align-items:center; justify-content:center; gap:8px;">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
+           stroke="currentColor" width="18" height="18">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+      Close
+    </button>
+  </div>
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // --- IndexedDB Setup ---
+  const DB_NAME = 'WalletAppDB';
+  const DB_VERSION = 1;
+  const USER_STORE = 'users';
+  const TRANSACTION_STORE = 'transactions';
+  
+  let db = null;
+  
+  // Initialize IndexedDB
+  function initIndexedDB() {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(DB_NAME, DB_VERSION);
+      
+      request.onerror = () => {
+        console.error("IndexedDB error:", request.error);
+        reject(request.error);
+      };
+      
+      request.onsuccess = () => {
+        db = request.result;
+        resolve(db);
+      };
+      
+      request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        
+        // Create user store if it doesn't exist
+        if (!db.objectStoreNames.contains(USER_STORE)) {
+          const userStore = db.createObjectStore(USER_STORE, { keyPath: 'username' });
+          userStore.createIndex('username', 'username', { unique: true });
+        }
+        
+        // Create transaction store if it doesn't exist
+        if (!db.objectStoreNames.contains(TRANSACTION_STORE)) {
+          const transactionStore = db.createObjectStore(TRANSACTION_STORE, { 
+            keyPath: 'id', 
+            autoIncrement: true 
+          });
+          transactionStore.createIndex('username', 'username', { unique: false });
+          transactionStore.createIndex('date', 'date', { unique: false });
+        }
+      };
+    });
+  }
+  
+  // Save user data to IndexedDB
+  async function saveUserToIndexedDB(userData) {
+    if (!db) return;
+    
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([USER_STORE], 'readwrite');
+      const store = transaction.objectStore(USER_STORE);
+      
+      const userRecord = {
+        username: currentUser,
+        ...userData,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      const request = store.put(userRecord);
+      
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+  
+  // Get user data from IndexedDB
+  async function getUserFromIndexedDB(username) {
+    if (!db) return null;
+    
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([USER_STORE], 'readonly');
+      const store = transaction.objectStore(USER_STORE);
+      const request = store.get(username);
+      
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+  
+  // Save transaction to IndexedDB
+  async function saveTransactionToIndexedDB(transactionData) {
+    if (!db) return;
+    
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([TRANSACTION_STORE], 'readwrite');
+      const store = transaction.objectStore(TRANSACTION_STORE);
+      
+      const record = {
+        username: currentUser,
+        ...transactionData,
+        date: new Date().toISOString()
+      };
+      
+      const request = store.add(record);
+      
+      request.onsuccess = () => resolve();
+      request.onerror = () => reject(request.error);
+    });
+  }
+  
+  // Get user transactions from IndexedDB
+  async function getUserTransactionsFromIndexedDB(username) {
+    if (!db) return [];
+    
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction([TRANSACTION_STORE], 'readonly');
+      const store = transaction.objectStore(TRANSACTION_STORE);
+      const index = store.index('username');
+      const request = index.getAll(username);
+      
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+  }
+  
+  // --- Modified saveUserData function ---
+  function saveUserData() {
+    // Save to localStorage (existing functionality)
+    localStorage.setItem(userKey, JSON.stringify(userData));
+    
+    // Also save to IndexedDB
+    if (db) {
+      saveUserToIndexedDB(userData).catch(error => {
+        console.error("Failed to save user data to IndexedDB:", error);
+      });
+    }
+  }
+
+  // --- Redirect if not logged in ---
+  const currentUser = localStorage.getItem("currentUser");
+  if (!currentUser) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  // --- Load User Data with IndexedDB fallback ---
+  const userKey = "user_" + currentUser;
+  let userData = JSON.parse(localStorage.getItem(userKey)) || {
+    balance: 0,
+    pendingDeposits: [],
+    pendingWithdrawals: [],
+    balanceVisible: true,
+    currency: "USD",
+    tier: 1,
+    history: [],
+    pin: null,
+    paymentMethods: {},
+    pinInstructions: "",
+    newPinNotification: null
+  };
+  
+  // Initialize IndexedDB and try to load user data from it
+  initIndexedDB().then(() => {
+    // Try to load user data from IndexedDB
+    getUserFromIndexedDB(currentUser).then(indexedDBUser => {
+      if (indexedDBUser) {
+        // Merge IndexedDB data with existing data, prioritizing IndexedDB
+        userData = { ...userData, ...indexedDBUser };
+        saveUserData(); // Ensure localStorage is updated
+      }
+    }).catch(error => {
+      console.error("Error loading from IndexedDB:", error);
+    });
+  }).catch(error => {
+    console.error("IndexedDB initialization failed:", error);
+  });
+
+// --- Currency symbols for display (all world currencies) ---
+const currencySymbols = {
+  AED: "د.إ", AFN: "؋", ALL: "L", AMD: "֏", ANG: "ƒ", AOA: "Kz",
+  ARS: "$", AUD: "$", AWG: "ƒ", AZN: "₼", BAM: "KM", BBD: "$",
+  BDT: "৳", BGN: "лв", BHD: ".د.ب", BIF: "FBu", BMD: "$", BND: "$",
+  BOB: "$b", BRL: "R$", BSD: "$", BTN: "Nu.", BWP: "P", BYN: "Br",
+  BZD: "$", CAD: "$", CDF: "FC", CHF: "CHF", CLP: "$", CNY: "¥",
+  COP: "$", CRC: "₡", CUP: "$", CVE: "$", CZK: "Kč", DJF: "Fdj",
+  DKK: "kr", DOP: "$", DZD: "د.ج", EGP: "£", ERN: "Nfk", ETB: "Br",
+  EUR: "€", FJD: "$", FKP: "£", GBP: "£", GEL: "₾", GGP: "£",
+  GHS: "₵", GIP: "£", GMD: "D", GNF: "FG", GTQ: "Q", GYD: "$",
+  HKD: "$", HNL: "L", HRK: "kn", HTG: "G", HUF: "Ft", IDR: "Rp",
+  ILS: "₪", IMP: "£", INR: "₹", IQD: "ع.د", IRR: "﷼", ISK: "kr",
+  JEP: "£", JMD: "$", JOD: "د.ا", JPY: "¥", KES: "Sh", KGS: "лв",
+  KHR: "៛", KMF: "CF", KPW: "₩", KRW: "₩", KWD: "د.ك", KYD: "$",
+  KZT: "₸", LAK: "₭", LBP: "ل.ل", LKR: "Rs", LRD: "$", LSL: "L",
+  LYD: "ل.د", MAD: "د.م.", MDL: "L", MGA: "Ar", MKD: "ден", MMK: "K",
+  MNT: "₮", MOP: "MOP$", MRU: "UM", MUR: "₨", MVR: "Rf", MWK: "MK",
+  MXN: "$", MYR: "RM", MZN: "MT", NAD: "$", NGN: "₦", NIO: "C$",
+  NOK: "kr", NPR: "₨", NZD: "$", OMR: "ر.ع.", PAB: "B/.", PEN: "S/",
+  PGK: "K", PHP: "₱", PKR: "₨", PLN: "zł", PYG: "Gs", QAR: "ر.ق",
+  RON: "lei", RSD: "дин.", RUB: "₽", RWF: "FRw", SAR: "ر.س", SBD: "$",
+  SCR: "₨", SDG: "ج.س.", SEK: "kr", SGD: "$", SHP: "£", SLL: "Le",
+  SOS: "Sh", SPL: "£", SRD: "$", STN: "Db", SVC: "$", SYP: "£",
+  SZL: "E", THB: "฿", TJS: "ЅМ", TMT: "m", TND: "د.ت", TOP: "T$",
+  TRY: "₺", TTD: "$", TVD: "$", TWD: "NT$", TZS: "Sh", UAH: "₴",
+  UGX: "Sh", USD: "$", UYU: "$U", UZS: "лв", VES: "Bs.", VND: "₫",
+  VUV: "VT", WST: "T", XAF: "FCFA", XCD: "$", XOF: "CFA", XPF: "₣",
+  YER: "﷼", ZAR: "R", ZMW: "ZK", ZWD: "Z$"
+};
+
+// --- Currency conversion rates relative to USD ---
+const exchangeRates = {
+  AED: 3.67,
+  AFN: 86.7,
+  ALL: 107.5,
+  AMD: 389.0,
+  ANG: 1.79,
+  AOA: 826.0,
+  ARS: 350.0,
+  AUD: 1.52,
+  AWG: 1.79,
+  AZN: 1.7,
+  BAM: 1.84,
+  BBD: 2.0,
+  BDT: 108.0,
+  BGN: 1.83,
+  BHD: 0.38,
+  BIF: 2070,
+  BMD: 1.0,
+  BND: 1.36,
+  BOB: 6.96,
+  BRL: 5.43,
+  BSD: 1.0,
+  BWP: 13.4,
+  BYN: 2.57,
+  BZD: 2.0,
+  CAD: 1.36,
+  CHF: 0.92,
+  CLP: 817.0,
+  CNY: 7.18,
+  COP: 5060.0,
+  CRC: 535.0,
+  CUP: 24.0,
+  CZK: 23.5,
+  DKK: 6.7,
+  DOP: 56.9,
+  DZD: 145.0,
+  EGP: 30.9,
+  ETB: 55.3,
+  EUR: 0.93,
+  FJD: 2.27,
+  GBP: 0.81,
+  GEL: 2.53,
+  GHS: 11.0,
+  GIP: 0.81,
+  GNF: 8650,
+  GTQ: 7.7,
+  HKD: 7.85,
+  HNL: 24.6,
+  HRK: 7.0,
+  HUF: 374.0,
+  IDR: 15600,
+  ILS: 3.63,
+  INR: 83.0,
+  IQD: 1460,
+  IRR: 42000,
+  ISK: 133.0,
+  JMD: 156.0,
+  JPY: 148.0,
+  KES: 148.0,
+  KGS: 87.0,
+  KHR: 4070,
+  KRW: 1360,
+  KWD: 0.31,
+  KZT: 444.0,
+  LAK: 17100,
+  LBP: 15100,
+  LKR: 324.0,
+  LYD: 4.85,
+  MAD: 10.4,
+  MDL: 19.0,
+  MKD: 57.6,
+  MMK: 2090,
+  MNT: 3400,
+  MOP: 8.1,
+  MRU: 36.0,
+  MUR: 44.0,
+  MXN: 18.0,
+  MYR: 4.55,
+  MZN: 63.0,
+  NAD: 18.5,
+  NGN: 780.0,
+  NOK: 10.4,
+  NPR: 131.0,
+  NZD: 1.66,
+  OMR: 0.39,
+  PAB: 1.0,
+  PEN: 3.85,
+  PGK: 3.65,
+  PHP: 55.0,
+  PKR: 298.0,
+  PLN: 4.3,
+  PYG: 7460,
+  QAR: 3.64,
+  RON: 4.6,
+  RSD: 109.0,
+  RUB: 92.0,
+  RWF: 1250,
+  SAR: 3.75,
+  SEK: 10.6,
+  SGD: 1.36,
+  SYP: 2510,
+  THB: 35.0,
+  TND: 3.0,
+  TRY: 32.0,
+  UAH: 36.8,
+  USD: 1.0,
+  UYU: 42.0,
+  UZS: 11220,
+  VND: 23950,
+  XAF: 610.0,
+  XOF: 610.0,
+  ZAR: 18.0,
+  ZMW: 22.0
+};
+
+  function getUserSetting(key, defaultValue) {
+    return userData.hasOwnProperty(key) ? userData[key] : defaultValue;
+  }
+  function setUserSetting(key, value) {
+    userData[key] = value;
+    saveUserData();
+  }
+
+
+  // --- Username & Profile Badge ---
+  document.getElementById("username").textContent = currentUser;
+  document.getElementById("profileBadge").textContent = currentUser.charAt(0).toUpperCase();
+
+  // --- Balance Logic ---
+  let balance = userData.balance || 0;
+  const balanceElement = document.getElementById("balanceAmount");
+  const toggleBalanceIcon = document.getElementById("toggleBalance");
+  let balanceVisible = getUserSetting("balanceVisible", true);
+
+function formatBalance(amount) {
+  const currency = getUserSetting("currency", "USD"); // 👈 now defaults to USD
+  const rate = exchangeRates[currency] || 1;
+  const converted = amount * rate;
+  const symbol = currencySymbols[currency] || currency;
+  return symbol + converted.toLocaleString(undefined, {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  });
+}
+
+  function renderBalance() {
+    balanceElement.textContent = balanceVisible ? formatBalance(balance) : "•••••••";
+    document.querySelectorAll(".eye-open").forEach(el => el.style.display = balanceVisible ? "block" : "none");
+    document.querySelectorAll(".eye-slash").forEach(el => el.style.display = balanceVisible ? "none" : "block");
+  }
+  renderBalance();
+  toggleBalanceIcon.addEventListener("click", () => {
+    balanceVisible = !balanceVisible;
+    setUserSetting("balanceVisible", balanceVisible);
+    renderBalance();
+  });
+
+  // --- Deposit Modal ---
+  const plusBtn = document.querySelector(".plus");
+  const depositModal = document.getElementById("depositModal");
+  const closeDeposit = document.getElementById("closeDeposit");
+  const depositFile = document.getElementById("depositFile");
+  const chipContainer = document.getElementById("chipContainer");
+
+  plusBtn.addEventListener("click", () => {
+    renderPaymentMethods();
+    depositModal.style.display = "flex";
+  });
+  closeDeposit.addEventListener("click", () => depositModal.style.display = "none");
+  window.addEventListener("click", e => { if (e.target === depositModal) depositModal.style.display = "none"; });
+
+  // --- Deposit File Preview ---
+  depositFile.addEventListener("change", () => {
+    chipContainer.querySelectorAll(".file-chip.uploaded").forEach(chip => chip.remove());
+    Array.from(depositFile.files).forEach(file => {
+      const chip = document.createElement("div");
+      chip.className = "file-chip uploaded";
+      const img = document.createElement("img");
+      img.src = URL.createObjectURL(file);
+      const clearBtn = document.createElement("span");
+      clearBtn.textContent = "✕";
+      clearBtn.className = "chipClear";
+      clearBtn.addEventListener("click", () => {
+        chip.remove();
+        const dt = new DataTransfer();
+        Array.from(depositFile.files).forEach(f => { if (f !== file) dt.items.add(f); });
+        depositFile.files = dt.files;
+      });
+      chip.appendChild(img);
+      chip.appendChild(clearBtn);
+      chipContainer.appendChild(chip);
+    });
+  });
+
+  // --- Submit Deposit ---
+  document.getElementById("depositForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const amount = parseFloat(document.getElementById("depositAmount").value);
+    const files = depositFile.files;
+
+    if (!files || files.length === 0) return showNotification("Please upload a payment slip.");
+    if (isNaN(amount) || amount <= 0) return showNotification("Please enter a valid amount.");
+
+    const file = files[0];
+    if (!file.type.startsWith("image/")) return showNotification("Invalid file type. Please upload an image.");
+
+    const slipUrl = URL.createObjectURL(file);
+    
+    const userCurrency = getUserSetting("currency", "USD");
+    userData.pendingDeposits.push({
+      amount,
+      currency: userCurrency,
+      status: "pending",
+      date: new Date().toISOString(),
+      slipName: file.name,
+      slipType: file.type,
+      slipSize: file.size,
+      slipUrl,
+      type: "deposit"
+    });
+    userData.history.unshift({ action: `Deposit submitted ${amount}`, date: new Date().toISOString() });
+    saveUserData();
+    
+    // Save transaction to IndexedDB
+    try {
+      await saveTransactionToIndexedDB({
+        type: "deposit",
+        amount,
+        currency: userCurrency,
+        status: "pending",
+        slipName: file.name
+      });
+    } catch (error) {
+      console.error("Failed to save transaction to IndexedDB:", error);
+    }
+
+    // After deposit submission
+    showNotification("Deposit submitted. Awaiting Slip Confirmation.");
+    depositModal.style.display = "none";
+    e.target.reset();
+
+    // clear uploaded chips only
+    chipContainer.querySelectorAll(".file-chip.uploaded").forEach(chip => chip.remove());
+
+    // reset file input so it's ready again
+    depositFile.value = null;
+  });
+
+  // --- Withdraw Modal ---
+  const withdrawAction = document.querySelector(".actions .action:first-child");
+  const withdrawModal = document.getElementById("withdrawModal");
+  const closeWithdraw = document.getElementById("closeWithdraw");
+  withdrawAction.addEventListener("click", () => withdrawModal.style.display = "flex");
+  closeWithdraw.addEventListener("click", () => withdrawModal.style.display = "none");
+  window.addEventListener("click", e => { if (e.target === withdrawModal) withdrawModal.style.display = "none"; });
+
+  // --- PIN Modal ---
+  const pinModal = document.getElementById("pinModal");
+  const closePin = pinModal.querySelector(".close");
+  document.getElementById("withdrawForm").addEventListener("submit", e => {
+  e.preventDefault();
+  
+  const amountEntered = parseFloat(document.getElementById("withdrawAmount").value);
+  const selectedCurrency = getUserSetting("currency", "EUR"); // current currency
+
+  if (isNaN(amountEntered) || amountEntered < 20) {
+    return showNotification(`Minimum withdrawal is ${currencySymbols[selectedCurrency]}20 or equivalent.`);
+  }
+
+  // Convert entered amount to base currency for checking balance
+  const amountInBase = amountEntered / (exchangeRates[selectedCurrency] || 1);
+
+  if (amountInBase > balance) {
+    return showNotification(`Insufficient funds. Your balance is ${formatBalance(balance)}.`);
+  }
+
+  withdrawModal.style.display = "none";
+  pinModal.style.display = "flex";
+
+  // store base amount for deduction and selected currency for display
+  pinModal.dataset.amount = amountInBase;
+  pinModal.dataset.withdrawCurrency = selectedCurrency;
+});
+  closePin.addEventListener("click", () => pinModal.style.display = "none");
+  window.addEventListener("click", e => { if (e.target === pinModal) pinModal.style.display = "none"; });
+
+  document.getElementById("pinForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const enteredPin = document.getElementById("activationPin").value.trim();
+    const amount = parseFloat(pinModal.dataset.amount || 0);
+
+    if (enteredPin && userData.pin && enteredPin === userData.pin) {
+      userData.pendingWithdrawals.push({ amount, status: "pending", date: new Date().toISOString() });
+      userData.history.unshift({ action: `Withdrawal submitted ${amount}`, date: new Date().toISOString() });
+      saveUserData();
+      
+      // Save transaction to IndexedDB
+      try {
+        await saveTransactionToIndexedDB({
+          type: "withdrawal",
+          amount,
+          currency: getUserSetting("currency", "USD"),
+          status: "pending"
+        });
+      } catch (error) {
+        console.error("Failed to save transaction to IndexedDB:", error);
+      }
+      
+      showNotification(`Withdrawal of ${formatBalance(amount)} submitted. Awaiting confirmation.`);
+      pinModal.style.display = "none";
+      e.target.reset();
+    } else {
+      showNotification("Invalid Activation PIN. Please try again.");
+    }
+  });
+ const learnMoreModal = document.getElementById("learnMoreModal");
+  const learnMoreBtn = document.getElementById("learnMoreBtn");
+  const closeLearnMore = document.getElementById("closeLearnMore");
+
+  learnMoreBtn.addEventListener("click", () => {
+    learnMoreModal.style.display = "flex";
+  });
+
+  closeLearnMore.addEventListener("click", () => {
+    learnMoreModal.style.display = "none";
+  });
+
+  window.addEventListener("click", (event) => {
+    if (event.target === learnMoreModal) {
+      learnMoreModal.style.display = "none";
+    }
+  });
+
+  // --- Buy PIN Flow ---
+  const buyPinBtn = document.getElementById("buyPinBtn");
+  buyPinBtn.addEventListener("click", () => {
+    const notifyModal = document.getElementById("notifyModal");
+    const notifyMessage = document.getElementById("notifyMessage");
+    const notifyClose = document.getElementById("notifyClose");
+
+    notifyMessage.innerHTML = `
+      <p style="font-size:15px; margin-bottom:12px; text-align:center;">
+        Please contact your project manager to purchase a PIN.
+      </p>
+      <button id="buyHereBtn" style="
+        margin-top:10px;background:#27ae60;color:#fff;font-weight:600;
+        padding:10px 14px;border:none;border-radius:6px;display:flex;
+        align-items:center;justify-content:center;gap:8px;width:100%;cursor:pointer;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" 
+             fill="none" stroke="currentColor" stroke-width="2" 
+             stroke-linecap="round" stroke-linejoin="round" 
+             class="feather feather-credit-card">
+          <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+          <line x1="1" y1="10" x2="23" y2="10"></line>
+        </svg>
+        Buy Here
+      </button>
+    `;
+
+    notifyModal.style.display = "flex";
+    notifyClose.onclick = () => notifyModal.style.display = "none";
+
+    setTimeout(() => {
+      const buyHereBtn = document.getElementById("buyHereBtn");
+      if (buyHereBtn) {
+        buyHereBtn.addEventListener("click", () => {
+          notifyModal.style.display = "none";
+          if (pinModal) pinModal.style.display = "none";
+          const instructionsBox = document.getElementById("pinInstructions");
+          instructionsBox.textContent = userData.pinInstructions || 
+            "Please follow the instructions provided by your project manager.";
+          document.getElementById("pinBuyModal").style.display = "flex";
+          renderPaymentMethods();
+        });
+      }
+    }, 50);
+  });
+
+  // --- Buy PIN Modal Logic ---
+  const pinBuyModal = document.getElementById("pinBuyModal");
+  const closePinBuy = document.getElementById("closePinBuy");
+  const pinBuyFile = document.getElementById("pinBuyFile");
+  const pinBuyChipContainer = document.getElementById("pinBuyChipContainer");
+
+  closePinBuy.addEventListener("click", () => pinBuyModal.style.display = "none");
+  window.addEventListener("click", e => { if (e.target === pinBuyModal) pinBuyModal.style.display = "none"; });
+
+  pinBuyFile.addEventListener("change", () => {
+    pinBuyChipContainer.querySelectorAll(".file-chip.uploaded").forEach(chip => chip.remove());
+    Array.from(pinBuyFile.files).forEach(file => {
+      const chip = document.createElement("div");
+      chip.className = "file-chip uploaded";
+      const img = document.createElement("img");
+      img.src = URL.createObjectURL(file);
+      const clearBtn = document.createElement("span");
+      clearBtn.textContent = "✕";
+      clearBtn.className = "chipClear";
+      clearBtn.addEventListener("click", () => {
+        chip.remove();
+        const dt = new DataTransfer();
+        Array.from(pinBuyFile.files).forEach(f => { if (f !== file) dt.items.add(f); });
+        pinBuyFile.files = dt.files;
+      });
+      chip.appendChild(img);
+      chip.appendChild(clearBtn);
+      pinBuyChipContainer.appendChild(chip);
+    });
+  });
+
+  document.getElementById("pinBuyForm").addEventListener("submit", async e => {
+    e.preventDefault();
+    const files = pinBuyFile.files;
+    if (!files || files.length === 0) return showNotification("Please upload a payment slip.");
+    const file = files[0];
+    if (!file.type.startsWith("image/")) return showNotification("Invalid file type. Please upload an image.");
+    const slipUrl = URL.createObjectURL(file);
+    userData.pendingDeposits.push({
+      status: "pending", date: new Date().toISOString(),
+      slipName: file.name, slipType: file.type, slipSize: file.size, slipUrl, type: "pin"
+    });
+    userData.history.unshift({ action: "PIN request submitted", date: new Date().toISOString() });
+    saveUserData();
+    
+    // Save transaction to IndexedDB
+    try {
+      await saveTransactionToIndexedDB({
+        type: "pin_purchase",
+        amount: 0,
+        status: "pending",
+        slipName: file.name
+      });
+    } catch (error) {
+      console.error("Failed to save transaction to IndexedDB:", error);
+    }
+    
+    showNotification("Activation PIN will be sent after slip confirmation.");
+    pinBuyModal.style.display = "none";
+    e.target.reset(); pinBuyChipContainer.innerHTML = ""; pinBuyFile.value = null;
+  });
+
+
+ // --- Currency Preference (modal with search) ---
+const changeCurrencyAction = document.querySelector(".actions .action:nth-child(2)");
+const currencyModal = document.getElementById("currencyModal");
+const closeCurrency = document.getElementById("closeCurrency");
+const currencyList = document.getElementById("currencyList");
+const currencySearch = document.getElementById("currencySearch");
+
+// Add any currencies you want here (code, symbol, name)
+const availableCurrencies = [
+  { code: "AED", symbol: "د.إ", name: "United Arab Emirates Dirham", flag: "🇦🇪" },
+  { code: "AFN", symbol: "؋", name: "Afghan Afghani", flag: "🇦🇫" },
+  { code: "ALL", symbol: "L", name: "Albanian Lek", flag: "🇦🇱" },
+  { code: "AMD", symbol: "֏", name: "Armenian Dram", flag: "🇦🇲" },
+  { code: "ANG", symbol: "ƒ", name: "Netherlands Antillean Guilder", flag: "🇳🇱" },
+  { code: "AOA", symbol: "Kz", name: "Angolan Kwanza", flag: "🇦🇴" },
+  { code: "ARS", symbol: "$", name: "Argentine Peso", flag: "🇦🇷" },
+  { code: "AUD", symbol: "$", name: "Australian Dollar", flag: "🇦🇺" },
+  { code: "AWG", symbol: "ƒ", name: "Aruban Florin", flag: "🇦🇼" },
+  { code: "AZN", symbol: "₼", name: "Azerbaijani Manat", flag: "🇦🇿" },
+  { code: "BAM", symbol: "KM", name: "Bosnia-Herzegovina Convertible Mark", flag: "🇧🇦" },
+  { code: "BBD", symbol: "$", name: "Barbadian Dollar", flag: "🇧🇧" },
+  { code: "BDT", symbol: "৳", name: "Bangladeshi Taka", flag: "🇧🇩" },
+  { code: "BGN", symbol: "лв", name: "Bulgarian Lev", flag: "🇧🇬" },
+  { code: "BHD", symbol: ".د.ب", name: "Bahraini Dinar", flag: "🇧🇭" },
+  { code: "BIF", symbol: "FBu", name: "Burundian Franc", flag: "🇧🇮" },
+  { code: "BMD", symbol: "$", name: "Bermudian Dollar", flag: "🇧🇲" },
+  { code: "BND", symbol: "$", name: "Brunei Dollar", flag: "🇧🇳" },
+  { code: "BOB", symbol: "Bs", name: "Bolivian Boliviano", flag: "🇧🇴" },
+  { code: "BRL", symbol: "R$", name: "Brazilian Real", flag: "🇧🇷" },
+  { code: "BSD", symbol: "$", name: "Bahamian Dollar", flag: "🇧🇸" },
+  { code: "BWP", symbol: "P", name: "Botswana Pula", flag: "🇧🇼" },
+  { code: "BYN", symbol: "Br", name: "Belarusian Ruble", flag: "🇧🇾" },
+  { code: "BZD", symbol: "$", name: "Belize Dollar", flag: "🇧🇿" },
+  { code: "CAD", symbol: "$", name: "Canadian Dollar", flag: "🇨🇦" },
+  { code: "CHF", symbol: "CHF", name: "Swiss Franc", flag: "🇨🇭" },
+  { code: "CLP", symbol: "$", name: "Chilean Peso", flag: "🇨🇱" },
+  { code: "CNY", symbol: "¥", name: "Chinese Yuan", flag: "🇨🇳" },
+  { code: "COP", symbol: "$", name: "Colombian Peso", flag: "🇨🇴" },
+  { code: "CRC", symbol: "₡", name: "Costa Rican Colón", flag: "🇨🇷" },
+  { code: "CUP", symbol: "$", name: "Cuban Peso", flag: "🇨🇺" },
+  { code: "CZK", symbol: "Kč", name: "Czech Koruna", flag: "🇨🇿" },
+  { code: "DKK", symbol: "kr", name: "Danish Krone", flag: "🇩🇰" },
+  { code: "DOP", symbol: "$", name: "Dominican Peso", flag: "🇩🇴" },
+  { code: "DZD", symbol: "د.ج", name: "Algerian Dinar", flag: "🇩🇿" },
+  { code: "EGP", symbol: "£", name: "Egyptian Pound", flag: "🇪🇬" },
+  { code: "ETB", symbol: "Br", name: "Ethiopian Birr", flag: "🇪🇹" },
+  { code: "EUR", symbol: "€", name: "Euro", flag: "🇪🇺" },
+  { code: "FJD", symbol: "$", name: "Fijian Dollar", flag: "🇫🇯" },
+  { code: "GBP", symbol: "£", name: "British Pound Sterling", flag: "🇬🇧" },
+  { code: "GEL", symbol: "₾", name: "Georgian Lari", flag: "🇬🇪" },
+  { code: "GHS", symbol: "₵", name: "Ghanaian Cedi", flag: "🇬🇭" },
+  { code: "GIP", symbol: "£", name: "Gibraltar Pound", flag: "🇬🇮" },
+  { code: "GNF", symbol: "FG", name: "Guinean Franc", flag: "🇬🇳" },
+  { code: "GTQ", symbol: "Q", name: "Guatemalan Quetzal", flag: "🇬🇹" },
+  { code: "HKD", symbol: "$", name: "Hong Kong Dollar", flag: "🇭🇰" },
+  { code: "HNL", symbol: "L", name: "Honduran Lempira", flag: "🇭🇳" },
+  { code: "HRK", symbol: "kn", name: "Croatian Kuna", flag: "🇭🇷" },
+  { code: "HUF", symbol: "Ft", name: "Hungarian Forint", flag: "🇭🇺" },
+  { code: "IDR", symbol: "Rp", name: "Indonesian Rupiah", flag: "🇮🇩" },
+  { code: "ILS", symbol: "₪", name: "Israeli New Shekel", flag: "🇮🇱" },
+  { code: "INR", symbol: "₹", name: "Indian Rupee", flag: "🇮🇳" },
+  { code: "IQD", symbol: "ع.د", name: "Iraqi Dinar", flag: "🇮🇶" },
+  { code: "IRR", symbol: "﷼", name: "Iranian Rial", flag: "🇮🇷" },
+  { code: "ISK", symbol: "kr", name: "Icelandic Króna", flag: "🇮🇸" },
+  { code: "JMD", symbol: "$", name: "Jamaican Dollar", flag: "🇯🇲" },
+  { code: "JPY", symbol: "¥", name: "Japanese Yen", flag: "🇯🇵" },
+  { code: "KES", symbol: "Sh", name: "Kenyan Shilling", flag: "🇰🇪" },
+  { code: "KGS", symbol: "лв", name: "Kyrgyzstani Som", flag: "🇰🇬" },
+  { code: "KHR", symbol: "៛", name: "Cambodian Riel", flag: "🇰🇭" },
+  { code: "KRW", symbol: "₩", name: "South Korean Won", flag: "🇰🇷" },
+  { code: "KWD", symbol: "د.ك", name: "Kuwaiti Dinar", flag: "🇰🇼" },
+  { code: "KZT", symbol: "₸", name: "Kazakhstani Tenge", flag: "🇰🇿" },
+  { code: "LAK", symbol: "₭", name: "Lao Kip", flag: "🇱🇦" },
+  { code: "LBP", symbol: "ل.ل", name: "Lebanese Pound", flag: "🇱🇧" },
+  { code: "LKR", symbol: "Rs", name: "Sri Lankan Rupee", flag: "🇱🇰" },
+  { code: "LYD", symbol: "ل.د", name: "Libyan Dinar", flag: "🇱🇾" },
+  { code: "MAD", symbol: "د.م.", name: "Moroccan Dirham", flag: "🇲🇦" },
+  { code: "MDL", symbol: "L", name: "Moldovan Leu", flag: "🇲🇩" },
+  { code: "MKD", symbol: "ден", name: "Macedonian Denar", flag: "🇲🇰" },
+  { code: "MMK", symbol: "K", name: "Myanmar Kyat", flag: "🇲🇲" },
+  { code: "MNT", symbol: "₮", name: "Mongolian Tögrög", flag: "🇲🇳" },
+  { code: "MOP", symbol: "MOP$", name: "Macanese Pataca", flag: "🇲🇴" },
+  { code: "MRU", symbol: "UM", name: "Mauritanian Ouguiya", flag: "🇲🇷" },
+  { code: "MUR", symbol: "₨", name: "Mauritian Rupee", flag: "🇲🇺" },
+  { code: "MXN", symbol: "$", name: "Mexican Peso", flag: "🇲🇽" },
+  { code: "MYR", symbol: "RM", name: "Malaysian Ringgit", flag: "🇲🇾" },
+  { code: "MZN", symbol: "MT", name: "Mozambican Metical", flag: "🇲🇿" },
+  { code: "NAD", symbol: "$", name: "Namibian Dollar", flag: "🇳🇦" },
+  { code: "NGN", symbol: "₦", name: "Nigerian Naira", flag: "🇳🇬" },
+  { code: "NOK", symbol: "kr", name: "Norwegian Krone", flag: "🇳🇴" },
+  { code: "NPR", symbol: "₨", name: "Nepalese Rupee", flag: "🇳🇵" },
+  { code: "NZD", symbol: "💰", name: "New Zealand Dollar", flag: "🇳🇿" },
+  { code: "OMR", symbol: "ر.ع.", name: "Omani Rial", flag: "🇴🇲" },
+  { code: "PAB", symbol: "B/.", name: "Panamanian Balboa", flag: "🇵🇦" },
+  { code: "PEN", symbol: "S/", name: "Peruvian Sol", flag: "🇵🇪" },
+  { code: "PGK", symbol: "K", name: "Papua New Guinean Kina", flag: "🇵🇬" },
+  { code: "PHP", symbol: "₱", name: "Philippine Peso", flag: "🇵🇭" },
+  { code: "PKR", symbol: "₨", name: "Pakistani Rupee", flag: "🇵🇰" },
+  { code: "PLN", symbol: "zł", name: "Polish Zloty", flag: "🇵🇱" },
+  { code: "PYG", symbol: "₲", name: "Paraguayan Guaraní", flag: "🇵🇾" },
+  { code: "QAR", symbol: "ر.ق", name: "Qatari Riyal", flag: "🇶🇦" },
+  { code: "RON", symbol: "lei", name: "Romanian Leu", flag: "🇷🇴" },
+  { code: "RSD", symbol: "дин", name: "Serbian Dinar", flag: "🇷🇸" },
+  { code: "RUB", symbol: "₽", name: "Russian Ruble", flag: "🇷🇺" },
+  { code: "RWF", symbol: "FRw", name: "Rwandan Franc", flag: "🇷🇼" },
+  { code: "SAR", symbol: "ر.س", name: "Saudi Riyal", flag: "🇸🇦" },
+  { code: "SEK", symbol: "kr", name: "Swedish Krona", flag: "🇸🇪" },
+  { code: "SGD", symbol: "$", name: "Singapore Dollar", flag: "🇸🇬" },
+  { code: "SYP", symbol: "£", name: "Syrian Pound", flag: "🇸🇾" },
+  { code: "THB", symbol: "฿", name: "Thai Baht", flag: "🇹🇭" },
+  { code: "TND", symbol: "د.ت", name: "Tunisian Dinar", flag: "🇹🇳" },
+  { code: "TRY", symbol: "₺", name: "Turkish Lira", flag: "🇹🇷" },
+  { code: "UAH", symbol: "₴", name: "Ukrainian Hryvnia", flag: "🇺🇦" },
+  { code: "USD", symbol: "$", name: "United States Dollar", flag: "🇺🇸" },
+  { code: "UYU", symbol: "$U", name: "Uruguayan Peso", flag: "🇺🇾" },
+  { code: "UZS", symbol: "лв", name: "Uzbekistani Som", flag: "🇺🇿" },
+  { code: "VND", symbol: "₫", name: "Vietnamese Dong", flag: "🇻🇳" },
+  { code: "XAF", symbol: "FCFA", name: "Central African CFA Franc", flag: "🇨🇲" },
+  { code: "XOF", symbol: "CFA", name: "West African CFA Franc", flag: "🇸🇳" },
+  { code: "ZAR", symbol: "R", name: "South African Rand", flag: "🇿🇦" },
+  { code: "ZMW", symbol: "ZK", name: "Zambian Kwacha", flag: "🇿🇲" }
+];
+
+function renderCurrencyList(filter = "") {
+    currencyList.innerHTML = "";
+
+    const filtered = availableCurrencies.filter(c =>
+        c.code.toLowerCase().includes(filter.toLowerCase()) ||
+        c.name.toLowerCase().includes(filter.toLowerCase())
+    );
+
+    if (filtered.length === 0) {
+        currencyList.innerHTML = '<div style="padding:12px;color:#666">No currencies found.</div>';
+        return;
+    }
+
+    const currentCurrency = getUserSetting("currency", "EUR");
+
+    filtered.forEach(c => {
+        const item = document.createElement("div");
+        item.className = "currency-item";
+        item.style.padding = "10px 12px";
+        item.style.borderBottom = "1px solid #f3f3fb";
+        item.style.cursor = "pointer";
+        item.style.display = "flex";
+        item.style.alignItems = "center";
+
+        // Highlight current currency
+        if(c.code === currentCurrency){
+            item.style.background = "#e9e6ff";
+            item.style.fontWeight = "600";
+        }
+
+        item.innerHTML = `<span style="font-size:20px; margin-right:8px;">${c.flag}</span> <strong>${c.code}</strong> <span style="color:#666; margin-left:6px;">${c.name}</span>`;
+
+        item.addEventListener("click", () => {
+            setUserSetting("currency", c.code);
+            renderBalance(); // Balance will update with symbol
+            currencyModal.style.display = "none";
+            showNotification(`Currency changed to ${c.flag} ${c.code}`);
+        });
+
+        currencyList.appendChild(item);
+    });
+}
+
+changeCurrencyAction.addEventListener("click", () => {
+  renderCurrencyList();
+  currencySearch.value = "";
+  currencyModal.style.display = "flex";
+  // small timeout to ensure modal is visible before focusing input
+  setTimeout(() => currencySearch.focus(), 50);
+});
+
+closeCurrency.addEventListener("click", () => currencyModal.style.display = "none");
+window.addEventListener("click", e => { if (e.target === currencyModal) currencyModal.style.display = "none"; });
+currencySearch.addEventListener("input", () => renderCurrencyList(currencySearch.value));
+window.addEventListener("keydown", (e) => { if (e.key === "Escape") currencyModal.style.display = "none"; });
+
+  // --- Account Tier ---
+  function renderTier() {
+    const currentTier = getUserSetting("tier", 1);
+    document.querySelectorAll(".tier").forEach((el, index) => {
+      el.classList.toggle("active", index + 1 === currentTier);
+    });
+  }
+  document.querySelectorAll(".tier").forEach((el, index) => {
+    el.addEventListener("click", () => { setUserSetting("tier", index + 1); renderTier(); });
+  });
+  renderTier();
+
+  // --- Payment Methods ---
+  function renderPaymentMethods() {
+    const containers = document.querySelectorAll("#userPaymentMethods");
+    containers.forEach(container => {
+      container.innerHTML = "";
+      let methods = userData.paymentMethods || {};
+      if (userData.paymentMethod && userData.paymentDetails) {
+        methods[userData.paymentMethod] = userData.paymentDetails;
+      }
+      if (Object.keys(methods).length === 0) {
+        container.innerHTML = "<em>No payment methods set by admin yet.</em>";
+        return;
+      }
+      Object.entries(methods).forEach(([method, details]) => {
+        let text = typeof details === "string" ? details : JSON.stringify(details);
+        const div = document.createElement("div");
+        div.className = "payment-method";
+        div.innerHTML = `<strong>${method}:</strong> ${text}`;
+        const copyBtn = document.createElement("button");
+        copyBtn.textContent = "Copy";
+        copyBtn.className = "copy-btn";
+        copyBtn.addEventListener("click", () => {
+          navigator.clipboard.writeText(text).then(() => {
+            copyBtn.textContent = "Copied!";
+            setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
+          });
+        });
+        div.appendChild(copyBtn);
+        container.appendChild(div);
+      });
+    });
+  }
+  renderPaymentMethods();
+
+  // --- Notification Modal ---
+  function showNotification(message) {
+    const notifyModal = document.getElementById("notifyModal");
+    const notifyMessage = document.getElementById("notifyMessage");
+    const notifyClose = document.getElementById("notifyClose");
+    notifyMessage.textContent = message;
+    notifyModal.style.display = "flex";
+    notifyClose.onclick = () => notifyModal.style.display = "none";
+    setTimeout(() => { notifyModal.style.display = "none"; }, 3000);
+  }
+
+  // --- Greeting ---
+  const hour = new Date().getHours();
+  document.getElementById("timeGreeting").textContent =
+    hour < 12 ? "Good Morning" : hour < 18 ? "Good Afternoon" : "Good Evening";
+
+  // --- Profile Modal & Logout ---
+  const profileBadge = document.getElementById("profileBadge");
+  const profileModal = document.getElementById("profileModal");
+  const closeProfile = document.querySelector("#profileModal .close");
+  const logoutBtn = document.getElementById("logoutBtn");
+  profileBadge.addEventListener("click", () => profileModal.style.display = "flex");
+  closeProfile.addEventListener("click", () => profileModal.style.display = "none");
+  window.addEventListener("click", e => { if (e.target === profileModal) profileModal.style.display = "none"; });
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("currentUser");
+    showNotification("Logged out successfully");
+    setTimeout(() => { window.location.href = "login.html"; }, 1500);
+  });
+
+  // --- 🔔 Check for new PIN notification ---
+  if (userData.newPinNotification && userData.newPinNotification.pin) {
+    const pin = userData.newPinNotification.pin;
+    const modal = document.createElement("div");
+    modal.className = "modal";
+    modal.style.display = "flex";
+    modal.innerHTML = `
+      <div class="modal-content" style="max-width:400px;text-align:center;">
+        <span class="close" id="closePinNotify" style="cursor:pointer;position:absolute;top:10px;right:15px;font-size:22px;">&times;</span>
+        <h3>Activation PIN</h3>
+        <p>Your account activation pin is:</p>
+        <p style="font-size:20px;font-weight:bold;color:#7a5cff;">${pin}</p>
+        <p style="margin-top:10px;font-size:14px;">Save this information in a safe place and do not share it with anyone.</p>
+      </div>`;
+    document.body.appendChild(modal);
+    document.getElementById("closePinNotify").addEventListener("click", () => {
+      modal.style.display = "none";
+      delete userData.newPinNotification;
+      saveUserData();
+    });
+  }
+});
+</script>
+ </body>
+</html>
+
