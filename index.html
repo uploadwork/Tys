@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
       setStatus("Login successful — redirecting...");
       // small timeout to allow localStorage to flush & status to render
       setTimeout(() => {
-        window.location.href = "dashboard14.html";
+        window.location.href = "dashboard.html";
       }, 350);
     } catch (err) {
       console.error("Login handler error:", err);
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
       localStorage.setItem(key, JSON.stringify(demo));
       setStatus("Demo user created — redirecting to dashboard...");
-      setTimeout(() => window.location.href = "dashboard14.html", 400);
+      setTimeout(() => window.location.href = "dashboard.html", 400);
     } catch (err) {
       console.error("Demo create error:", err);
       setStatus("Could not create demo: " + err.message, true);
